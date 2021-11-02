@@ -1,5 +1,6 @@
 var wheelColorPicker;
 var pauseColorPicker;
+var waypointColorPicker;
 
 window.addEventListener("message", function(event) 
 {
@@ -12,6 +13,7 @@ window.addEventListener("message", function(event)
     else if (event.data.type === "fetch") {
         wheelColorPicker.value = FormattedRgbToHex(event.data.wheelr, event.data.wheelg, event.data.wheelb);
         pauseColorPicker.value = FormattedRgbToHex(event.data.pauser, event.data.pauseg, event.data.pauseb);
+        waypointColorPicker.value = FormattedRgbToHex(event.data.waypointr, event.data.waypointg, event.data.waypointb);
     }
 });
 
@@ -50,6 +52,18 @@ window.addEventListener("load", function() {
             method: "POST",
             body: JSON.stringify({
                 type: "pausecolor",
+                color: HexToRgb(event.target.value)
+            })
+        })
+    }, false);
+
+    waypointColorPicker = document.querySelector("#colorPickerWaypoint");
+    waypointColorPicker.addEventListener("change", function(event) {
+        fetch(`https://${GetParentResourceName()}/action`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                type: "waypointcolor",
                 color: HexToRgb(event.target.value)
             })
         })

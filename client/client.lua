@@ -1,5 +1,6 @@
 local wheelr, wheelg, wheelb = 0, 0, 0
 local pauser, pauseg, pauseb = 0, 0, 0
+local waypointr, waypointg, waypointb = 0, 0, 0
 local showMenu = false
 
 CreateThread(function() 
@@ -28,7 +29,12 @@ RegisterNUICallback("action", function(data, cb)
         pauser, pauseg, pauseb = data.color[1], data.color[2], data.color[3]
 
         ReplaceHudColourWithRgba(117, pauser, pauseg, pauseb, 200)
-        TriggerServerEvent("cts:setThemeColors", nil, pauser..","..pauseg..","..pauseb)
+        TriggerServerEvent("cts:setThemeColors", nil, pauser..","..pauseg..","..pauseb, nil)
+    elseif data.type == "waypointcolor" then
+        waypointr, waypointg, waypointb = data.color[1], data.color[2], data.color[3]
+
+        ReplaceHudColourWithRgba(142, waypointr, waypointg, waypointb, 200)
+        TriggerServerEvent("cts:setThemeColors", nil, nil, waypointr..","..waypointg..","..waypointb)
     end
     
     cb("OK")
@@ -47,6 +53,12 @@ AddEventHandler("cts:fetchThemeColors", function(colors)
         pauser, pauseg, pauseb = tonumber(pausecolor[1]), tonumber(pausecolor[2]), tonumber(pausecolor[3])
         ReplaceHudColourWithRgba(117, pauser, pauseg, pauseb, 200)
     end
+
+    if colors.waypoint ~= "" then
+        waypointcolor = splitString(colors.waypoint, ",")
+        waypointr, waypointg, waypointb = tonumber(waypointcolor[1]), tonumber(waypointcolor[2]), tonumber(waypointcolor[3])
+        ReplaceHudColourWithRgba(142, waypointr, waypointg, waypointb, 200)
+    end
     
     SendNUIMessage({
         type = "fetch",
@@ -55,6 +67,9 @@ AddEventHandler("cts:fetchThemeColors", function(colors)
         wheelb = wheelb,
         pauser = pauser,
         pauseg = pauseg,
-        pauseb = pauseb
+        pauseb = pauseb,
+        waypointr = waypointr,
+        waypointg = waypointg,
+        waypointb = waypointb
     })
 end)

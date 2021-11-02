@@ -16,7 +16,8 @@ AddEventHandler("cts:getThemeColors", function()
                 license = license, 
                 colors = {
                     wheel = "",
-                    pause = ""
+                    pause = "",
+                    waypoint = ""
                 }
             } 
         }
@@ -31,14 +32,15 @@ AddEventHandler("cts:getThemeColors", function()
                 license = license, 
                 colors = {
                     wheel = "",
-                    pause = ""
+                    pause = "",
+                    waypoint = ""
                 }
             }
 
             SaveResourceFile(GetCurrentResourceName(), "./data/data.json", json.encode(playersDataJson, { indent = true }), -1)
             playersDataJson = json.decode(LoadResourceFile(GetCurrentResourceName(), "./data/data.json"))
         else
-            if playersDataJson[position].colors.wheel ~= "" or playersDataJson[position].colors.pause ~= "" then
+            if playersDataJson[position].colors.wheel ~= "" or playersDataJson[position].colors.pause ~= "" or playersDataJson[position].colors.waypoint ~= "" then
                 TriggerClientEvent("cts:fetchThemeColors", _source, playersDataJson[position].colors)
             end
         end
@@ -46,7 +48,7 @@ AddEventHandler("cts:getThemeColors", function()
 end)
 
 RegisterNetEvent("cts:setThemeColors")
-AddEventHandler("cts:setThemeColors", function(wheelcolor, pausecolor)
+AddEventHandler("cts:setThemeColors", function(wheelcolor, pausecolor, waypointcolor)
     local _source = source
     local license = GetLicense(GetPlayerIdentifiers(_source))
 
@@ -58,6 +60,10 @@ AddEventHandler("cts:setThemeColors", function(wheelcolor, pausecolor)
 
         if pausecolor ~= nil then
             playersDataJson[position].colors.pause = pausecolor
+        end
+
+        if waypointcolor ~= nil then
+            playersDataJson[position].colors.waypoint = waypointcolor
         end
 
         SaveResourceFile(GetCurrentResourceName(), "./data/data.json", json.encode(playersDataJson, { indent = true }), -1)
