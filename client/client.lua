@@ -36,14 +36,17 @@ end)
 
 RegisterNetEvent("cts:fetchThemeColors")
 AddEventHandler("cts:fetchThemeColors", function(colors)
-    wheelcolor = splitString(colors.wheel, ",") -- Split with "," because the rgb value is stocked as a string value ("r,g,b")
-    wheelr, wheelg, wheelb = tonumber(wheelcolor[1]), tonumber(wheelcolor[2]), tonumber(wheelcolor[3])
+    if colors.wheel ~= "" then
+        wheelcolor = splitString(colors.wheel, ",") -- Split with "," because the rgb value is stocked as a string value ("r,g,b")
+        wheelr, wheelg, wheelb = tonumber(wheelcolor[1]), tonumber(wheelcolor[2]), tonumber(wheelcolor[3])
+        ReplaceHudColourWithRgba(116, wheelr, wheelg, wheelb, 200)
+    end
 
-    pausecolor = splitString(colors.pause, ",")
-    pauser, pauseg, pauseb = tonumber(pausecolor[1]), tonumber(pausecolor[2]), tonumber(pausecolor[3])
-
-    ReplaceHudColourWithRgba(116, wheelr, wheelg, wheelb, 200)
-    ReplaceHudColourWithRgba(117, pauser, pauseg, pauseb, 200)
+    if colors.pause ~= "" then
+        pausecolor = splitString(colors.pause, ",")
+        pauser, pauseg, pauseb = tonumber(pausecolor[1]), tonumber(pausecolor[2]), tonumber(pausecolor[3])
+        ReplaceHudColourWithRgba(117, pauser, pauseg, pauseb, 200)
+    end
     
     SendNUIMessage({
         type = "fetch",
