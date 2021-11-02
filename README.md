@@ -1,6 +1,7 @@
 # cuchi_themeSelector
 Let your players choose their color theme 😉  
-## [Preview video](https://youtu.be/mnCEPNBpFto)
+# [Visit my shop](https://cuchi-store.tebex.io/)
+# [Preview video](https://youtu.be/mnCEPNBpFto)
 
 <p align="center">
   <a target="_blank" href="https://discord.gg/qvFmwj2a2T">Discord for support</a>
