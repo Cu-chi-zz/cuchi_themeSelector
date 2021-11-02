@@ -1,10 +1,3 @@
-
-function NotificationText(text)
-    SetNotificationTextEntry("STRING")
-    AddTextComponentSubstringPlayerName(text)
-    DrawNotification(false, true)
-end
-
 function splitString(inputstr, sep)
     if sep == nil then
         sep = "%s"
