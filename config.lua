@@ -1,0 +1,3 @@
+Cfg = {
+    Command = "wheelcolor"
+}
