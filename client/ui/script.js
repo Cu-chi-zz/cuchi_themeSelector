@@ -1,3 +1,6 @@
+var wheelColorPicker;
+var pauseColorPicker;
+
 window.addEventListener("message", function(event) 
 {
     if (event.data.type === "show") {
@@ -5,6 +8,10 @@ window.addEventListener("message", function(event)
             document.getElementsByTagName("body")[0].style.display = "block";
         else 
             document.getElementsByTagName("body")[0].style.display = "none";
+    }
+    else if (event.data.type === "fetch") {
+        wheelColorPicker.value = FormattedRgbToHex(event.data.wheelr, event.data.wheelg, event.data.wheelb);
+        pauseColorPicker.value = FormattedRgbToHex(event.data.pauser, event.data.pauseg, event.data.pauseb);
     }
 });
 
@@ -23,15 +30,26 @@ window.addEventListener("keyup", function(event)
     }
 });
 
-var colorPicker;
 window.addEventListener("load", function() {
-    colorPicker = document.querySelector("#colorPicker");
-    colorPicker.addEventListener("change", function(event) {
+    wheelColorPicker = document.querySelector("#colorPickerWheel");
+    wheelColorPicker.addEventListener("change", function(event) {
         fetch(`https://${GetParentResourceName()}/action`,
         {
             method: "POST",
             body: JSON.stringify({
                 type: "wheelcolor",
+                color: HexToRgb(event.target.value)
+            })
+        })
+    }, false);
+
+    pauseColorPicker = document.querySelector("#colorPickerPause");
+    pauseColorPicker.addEventListener("change", function(event) {
+        fetch(`https://${GetParentResourceName()}/action`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                type: "pausecolor",
                 color: HexToRgb(event.target.value)
             })
         })
@@ -44,4 +62,18 @@ function HexToRgb(hex) {
         '0x' + hex[3] + hex[4] | 0, 
         '0x' + hex[5] + hex[6] | 0
     ];
+}
+
+function RgbToHex(rgb) { 
+    var hex = Number(rgb).toString(16);
+    if (hex.length < 2)
+        hex = "0" + hex;
+    return hex;
+};
+
+function FormattedRgbToHex(r, g, b) { 
+    var red = RgbToHex(r);
+    var green = RgbToHex(g);
+    var blue = RgbToHex(b);
+    return "#" + red + green + blue
 }
