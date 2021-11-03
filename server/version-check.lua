@@ -1,5 +1,9 @@
-if Cfg.CheckVersion then
-    CreateThread( function()
+CreateThread( function()
+    if GetCurrentResourceName() ~= "cuchi_themeSelector" then -- If the resource name is changed, then the resource kvp won't work
+        print("^7[^6"..GetCurrentResourceName().."^7] > ^1You shouldn't change the resource name")
+    end
+
+    if Cfg.CheckVersion then
         updatePath = "/Cu-chi/cuchi_themeSelector"
 
         PerformHttpRequest("https://raw.githubusercontent.com"..updatePath.."/master/version", function(err, responseText, headers)
@@ -11,5 +15,5 @@ if Cfg.CheckVersion then
                 print("^7[^6"..GetCurrentResourceName().."^7] > ^2Up to date!^7")
             end
         end, "GET")
-    end)
-end
+    end
+end)

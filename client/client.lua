@@ -2,9 +2,44 @@ local wheelr, wheelg, wheelb = 0, 0, 0
 local pauser, pauseg, pauseb = 0, 0, 0
 local waypointr, waypointg, waypointb = 0, 0, 0
 local showMenu = false
+local kvpData = {
+    ["pause"] = "",
+    ["waypoint"] = "",
+    ["wheel"] = ""
+}
 
-CreateThread(function() 
-    TriggerServerEvent("cts:getThemeColors")
+CreateThread(function()
+    if not Cfg.UseResourceKvp then
+        TriggerServerEvent("cts:getThemeColors")
+        kvpData = nil
+    else
+        for key, _ in pairs(kvpData) do
+            local supposedKey = "cts:"..key
+
+            if GetResourceKvpString(supposedKey) ~= nil then -- Check if the value is saved in the user cache files
+                kvpData[key] = GetResourceKvpString(supposedKey) -- Set the correct kvp key with in the correct field
+                print(("%s setted with the value of %s (%s)"):format(key, supposedKey, GetResourceKvpString(supposedKey)))
+
+                if kvpData[key] ~= "" then
+                    colorData = splitString(kvpData[key], ",") -- Split with "," because the rgb value is stocked as a string value ("r,g,b")
+                    
+                    if key == "pause" then
+                        pauser, pauseg, pauseb = tonumber(colorData[1]), tonumber(colorData[2]), tonumber(colorData[3])
+                        ReplaceHudColourWithRgba(117, pauser, pauseg, pauseb, 200)
+                    elseif key == "waypoint" then
+                        waypointr, waypointg, waypointb = tonumber(colorData[1]), tonumber(colorData[2]), tonumber(colorData[3])
+                        ReplaceHudColourWithRgba(142, waypointr, waypointg, waypointb, 200)
+                    elseif key == "wheel" then
+                        wheelr, wheelg, wheelb = tonumber(colorData[1]), tonumber(colorData[2]), tonumber(colorData[3])
+                        ReplaceHudColourWithRgba(116, wheelr, wheelg, wheelb, 200)
+                    end
+                end
+            else
+                print(("%s is not saved in the files: %s"):format(key, tostring(GetResourceKvpString(supposedKey))))
+                SetResourceKvp(supposedKey, "")
+            end
+        end
+    end
 end)
 
 RegisterCommand(Cfg.Command, function() 
@@ -24,17 +59,32 @@ RegisterNUICallback("action", function(data, cb)
         wheelr, wheelg, wheelb = data.color[1], data.color[2], data.color[3]
         
         ReplaceHudColourWithRgba(116, wheelr, wheelg, wheelb, 200)
-        TriggerServerEvent("cts:setThemeColors", wheelr..","..wheelg..","..wheelb, nil)
+
+        if not Cfg.UseResourceKvp then
+            TriggerServerEvent("cts:setThemeColors", wheelr..","..wheelg..","..wheelb, nil, nil)
+        else
+            SetResourceKvp("cts:wheel", wheelr..","..wheelg..","..wheelb)
+        end
     elseif data.type == "pausecolor" then
         pauser, pauseg, pauseb = data.color[1], data.color[2], data.color[3]
 
         ReplaceHudColourWithRgba(117, pauser, pauseg, pauseb, 200)
-        TriggerServerEvent("cts:setThemeColors", nil, pauser..","..pauseg..","..pauseb, nil)
+
+        if not Cfg.UseResourceKvp then
+            TriggerServerEvent("cts:setThemeColors", nil, pauser..","..pauseg..","..pauseb, nil)
+        else
+            SetResourceKvp("cts:pause", pauser..","..pauseg..","..pauseb)
+        end
     elseif data.type == "waypointcolor" then
         waypointr, waypointg, waypointb = data.color[1], data.color[2], data.color[3]
 
         ReplaceHudColourWithRgba(142, waypointr, waypointg, waypointb, 200)
-        TriggerServerEvent("cts:setThemeColors", nil, nil, waypointr..","..waypointg..","..waypointb)
+
+        if not Cfg.UseResourceKvp then
+            TriggerServerEvent("cts:setThemeColors", nil, nil, waypointr..","..waypointg..","..waypointb)
+        else
+            SetResourceKvp("cts:waypoint", waypointr..","..waypointg..","..waypointb)
+        end
     end
     
     cb("OK")
