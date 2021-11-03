@@ -45,6 +45,20 @@ end)
 RegisterCommand(Cfg.Command, function() 
     showMenu = not showMenu
     SetNuiFocus(showMenu, showMenu)
+
+    SendNUIMessage({
+        type = "fetch",
+        wheelr = wheelr,
+        wheelg = wheelg,
+        wheelb = wheelb,
+        pauser = pauser,
+        pauseg = pauseg,
+        pauseb = pauseb,
+        waypointr = waypointr,
+        waypointg = waypointg,
+        waypointb = waypointb
+    })
+
     SendNUIMessage({
         type = "show",
         show = showMenu
@@ -109,17 +123,4 @@ AddEventHandler("cts:fetchThemeColors", function(colors)
         waypointr, waypointg, waypointb = tonumber(waypointcolor[1]), tonumber(waypointcolor[2]), tonumber(waypointcolor[3])
         ReplaceHudColourWithRgba(142, waypointr, waypointg, waypointb, 200)
     end
-    
-    SendNUIMessage({
-        type = "fetch",
-        wheelr = wheelr,
-        wheelg = wheelg,
-        wheelb = wheelb,
-        pauser = pauser,
-        pauseg = pauseg,
-        pauseb = pauseb,
-        waypointr = waypointr,
-        waypointg = waypointg,
-        waypointb = waypointb
-    })
 end)
